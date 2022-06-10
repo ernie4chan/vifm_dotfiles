@@ -380,3 +380,9 @@ fileviewer	{*.docx},
 "filetype * open
 
 " }}}
+
+" {{{ --- Script files. ---
+
+source ~/.config/vifm/scripts/vifm_devicons/favicons.vifm
+
+" }}}

@@ -1,3 +1,6 @@
 [submodule "colors"]
 	path = colors
 	url = https://github.com/vifm/vifm-colors.git
+[submodule "scripts/vifm_devicons"]
+	path = scripts/vifm_devicons
+	url = https://github.com/cirala/vifm_devicons.git
