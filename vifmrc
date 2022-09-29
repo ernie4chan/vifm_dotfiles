@@ -45,7 +45,7 @@ endif
 
 " What should be saved automatically between vifm sessions.  Drop "savedirs"
 "  value if you don't want vifm to remember last visited directories for you.
-set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
+set vifminfo=dhistory,chistory,state,tui,shistory,
     \phistory,fhistory,dirstack,registers,bookmarks,bmarks
 
 " Show list of matches on tab completion in command-line mode.
@@ -70,7 +70,7 @@ set vimhelp
 " {{{ --- UI. ---
 
 " Colorschme: Picks the first one supported by the terminal.
-colorscheme crown_24bit
+colorscheme molokai
 
 " Try to leave some space from cursor to upper/lower border in lists.
 set scrolloff=4
@@ -383,6 +383,7 @@ fileviewer	{*.docx},
 
 " {{{ --- Script files. ---
 
+" New icon set for vifm.
 source ~/.config/vifm/scripts/vifm_devicons/favicons.vifm
 
 " }}}
