@@ -5,7 +5,7 @@
 " Update: 2022-06-08
 " ---------------------------------------------------------
 
-" {{{ --- Configuration. ---
+" {{{ Configuration.
 
 " Command used to edit files in various contexts for 'vi' clone such as:
 "  Vim (default), Elvis or Vile.
@@ -67,10 +67,10 @@ set vimhelp
 
 " }}}
 
-" {{{ --- UI. ---
+" {{{ UI.
 
 " Colorschme: Picks the first one supported by the terminal.
-colorscheme afterglow
+colorscheme matrix
 
 " Try to leave some space from cursor to upper/lower border in lists.
 set scrolloff=4
@@ -93,7 +93,7 @@ set viewcolumns=-{name}..,6{size},16{mtime}.
 
 " }}}
 
-" {{{ --- Marks. ---
+" {{{ Marks.
 
 " :mark mark /full/directory/path [filename]
 mark c ~/.config
@@ -103,7 +103,7 @@ mark h ~/
 
 " }}}
 
-" {{{ --- Commands. ---
+" {{{ Commands.
 
 " :com[mand][!] command_name action
 " The following macros can be used in a command.
@@ -126,7 +126,7 @@ command! reload :write | restart full
 
 " }}}
 
-" {{{ --- Mappings. ---
+" {{{ Mappings.
 
 " Start shell in current directory.
 nnoremap s :shell<cr>
@@ -188,7 +188,7 @@ nnoremap <c-u> <c-w>x
 
 " }}}
 
-" {{{ --- Filetypes. ---
+" {{{ Filetypes.
 
 " The file type is for the default programs to be used with a file extension.
 " :filetype pattern1,pattern2 defaultprogram,program2
@@ -354,7 +354,7 @@ fileviewer	{*.docx},
 
 " }}}
 
-" {{{ --- Syntax highlighting in preview. ---
+" {{{ Syntax highlighting in preview.
 
 " Explicitly set highlight type for some extensions.
 
@@ -381,7 +381,7 @@ fileviewer	{*.docx},
 
 " }}}
 
-" {{{ --- Script files. ---
+" {{{ Script files.
 
 " New icon set for vifm.
 source ~/.config/vifm/scripts/vifm_devicons/favicons.vifm
