@@ -8,25 +8,25 @@
 " {{{ Configuration.
 
 " Command used to edit files in various contexts for 'vi' clone such as:
-"  Vim (default), Elvis or Vile.
-set vicmd=$EDITOR
+" Vim (default), Elvis or Vile.
+set vicmd=vim
 
 " This makes vifm perform file operations on its own instead of relying on
-"  doesn't support progress measuring.
+" doesn't support progress measuring.
 set syscalls
 
 " Trash Directory.
 set trash
 
 " With this option turned on you can run partially entered commands with
-"  unambiguous beginning using :! (e.g. :!Te instead of :!Terminal or :!Te<tab>).
+" unambiguous beginning using :! (e.g. :!Te instead of :!Terminal or :!Te<tab>).
 set fastrun
 
 " This is how many directories to store in the directory history.
 set history=1000
 
 " Automatically resolve symbolic links on 'l' or 'Enter'.
-set nofollowlinks
+set followlinks
 
 " Natural sort of (version) numbers within text.
 set sortnumbers
@@ -35,7 +35,7 @@ set sortnumbers
 set undolevels=100
 
 " If you would like to run an executable file when you press
-"  'Enter', 'l' or Right Arrow, set this.
+" 'Enter', 'l' or Right Arrow, set this.
 set norunexec
 
 " Don't do too many requests to slow file systems.
@@ -44,7 +44,7 @@ if !has('win')
 endif
 
 " What should be saved automatically between vifm sessions.  Drop "savedirs"
-"  value if you don't want vifm to remember last visited directories for you.
+" value if you don't want vifm to remember last visited directories for you.
 set vifminfo=dhistory,chistory,state,tui,shistory,
     \phistory,fhistory,dirstack,registers,bookmarks,bmarks
 
@@ -63,7 +63,10 @@ set incsearch
 set nohlsearch
 
 " Use Vim's format of help file (has highlighting and "hyperlinks").
-set vimhelp
+" If you installed the vim.txt help file set vimhelp.
+" If would rather use a plain text help file set novimhelp.
+"set vimhelp
+set novimhelp
 
 " }}}
 
