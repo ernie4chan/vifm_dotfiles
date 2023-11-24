@@ -73,7 +73,7 @@ set novimhelp
 " {{{ UI.
 
 " Colorschme: Picks the first one supported by the terminal.
-colorscheme matrix
+colorscheme afterglow
 
 " Try to leave some space from cursor to upper/lower border in lists.
 set scrolloff=4
