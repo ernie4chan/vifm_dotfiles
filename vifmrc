@@ -100,9 +100,8 @@ set viewcolumns=-{name}..,6{size},16{mtime}.
 " {{{ Marks.
 
 " :mark mark /full/directory/path [filename]
-mark c ~/.config
-mark D ~/Documents
-mark d ~/Downloads
+mark d ~/Descargas
+mark D ~/Downloads
 mark h ~/
 
 " }}}
