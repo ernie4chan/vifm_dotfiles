@@ -8,6 +8,9 @@
 
 " {{{ Configuration.
 
+" Colorschme: Picks the first one supported by the terminal.
+colorscheme gruvbox
+
 " Command used to edit files in various contexts for 'vi' clone such as:
 " Vim (default), Elvis or Vile.
 set vicmd=vim
@@ -24,10 +27,16 @@ set trash
 set fastrun
 
 " This is how many directories to store in the directory history.
-set history=1000
+set history=10000
 
 " Automatically resolve symbolic links on 'l' or 'Enter'.
 set followlinks
+
+" Use Vim's format of help file (has highlighting and "hyperlinks").
+" If you installed the vim.txt help file set vimhelp.
+" If would rather use a plain text help file set novimhelp.
+set vimhelp
+"set novimhelp
 
 " Natural sort of (version) numbers within text.
 set sortnumbers
@@ -49,6 +58,10 @@ endif
 set vifminfo=dhistory,chistory,state,tui,shistory,
     \phistory,fhistory,dirstack,registers,bookmarks,bmarks
 
+" Display suggestions in normal, visual and view modes for keys, marks and
+"  registers (at most 5 files). In other view, when available.
+set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
+
 " Show list of matches on tab completion in command-line mode.
 set wildmenu
 
@@ -63,27 +76,13 @@ set smartcase
 set incsearch
 set nohlsearch
 
-" Use Vim's format of help file (has highlighting and "hyperlinks").
-" If you installed the vim.txt help file set vimhelp.
-" If would rather use a plain text help file set novimhelp.
-"set vimhelp
-set novimhelp
-
-" }}}
-
-" {{{ UI.
-
-" Colorschme: Picks the first one supported by the terminal.
-colorscheme gruvbox
-
 " Try to leave some space from cursor to upper/lower border in lists.
 set scrolloff=4
 
-" Display suggestions in normal, visual and view modes for keys, marks and
-"  registers (at most 5 files). In other view, when available.
-set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
-
 " Set custom status line look.
+"				rights | user:group | size | date | file name | space left
+"set statusline="%1* %-10t  %N %4* %10d %2* owner:%u:%-7g %5* size:%s  %3* attr:%A"
+"set statusline="%10A | %10u:%-7g  | %10E | %15d | %-35f     | Space left: %-5a "
 set statusline=" %t%= %A %10u:%-7g %15s %20d  "
 
 " Format for displaying time in file list. For example:
