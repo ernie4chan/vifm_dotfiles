@@ -9,7 +9,7 @@
 " {{{ Configuration.
 
 " Colorschme: Picks the first one supported by the terminal.
-colorscheme gruvbox
+colorscheme afterglow
 
 " Command used to edit files in various contexts for 'vi' clone such as:
 " Vim (default), Elvis or Vile.
@@ -372,10 +372,6 @@ filetype {*.pptx,*.ppt,*.odp},
 			\application/vnd.ms-powerpoint*,
 			\application/mspowerpoint>
 			\ msppoint.sh &,
-
-" Enable ls colors in folder preview.
-fileviewer */ ls --color=always
-fileviewer .*/ ls --color=always
 
 " }}}
 
