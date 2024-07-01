@@ -174,6 +174,7 @@ nnoremap <f5> :copy<cr>
 nnoremap <f6> :move<cr>
 nnoremap <f7> :mkdir<space>
 nnoremap <f8> :delete<cr>
+nnoremap <f9> :touch<space>
 
 " MC-like: Open current directory in the other pane.
 nnoremap <a-i> :sync<cr>
@@ -187,6 +188,15 @@ nnoremap . za
 
 " Fuzzy search files.
 nnoremap / :FZFfind <cr>
+
+" create new tab
+nnoremap ,t :tabnew<cr>:view!<cr>
+
+" switch to tab to the left
+nnoremap ,h :tabprevious<cr>:view!<cr>
+
+" switch to tab to the left
+nnoremap ,l :tabnext<cr>:view!<cr>
 
 " Interaction with system clipboard.
 if has('win')
@@ -239,31 +249,31 @@ endif
 " :filetype pattern1,pattern2 defaultprogram,program2
 " :fileviewer pattern1,pattern2 consoleviewer
 
-" Image
+" Image.
 filetype	{*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
 			\ {Open in Irfanview}
 			\ i_view64.exe %f &,
 fileviewer	{*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
 			\ identify %f
 
-" Pdf
+" Pdf.
 filetype	{*.pdf},<application/pdf>
 			\ {Open in Acrobat}
 			\ acrobat.sh &,
 fileviewer	{*.pdf},<application/pdf>
 			\ pdftotext -nopgbrk %c -
 
-" PostScript
+" PostScript.
 "filetype	{*.ps,*.eps,*.ps.gz},<application/postscript>
 
-" Audio
+" Audio.
 filetype	{*.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus},
 			\<audio/*>
 			\ {Open in VLC}
 			\ vlc.sh &,
 fileviewer	*.mp3 mp3info
 
-" Video
+" Video.
 filetype	{*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
 			\*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
 			\*.as[fx]},
@@ -276,69 +286,69 @@ fileviewer	{*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
 			\<video/*>
 			\ ffprobe.sh &,
 
-" Torrent
+" Torrent.
 filetype	{*.torrent},<application/x-bittorrent>
 			\ {Open in qBittorent}
 			\ qbittorrent.sh &,
 
-" Web
+" Web.
 filetype	{*.html,*.htm},<text/html>
 			\ {Open in vim}
 			\ vim,
 fileviewer	{*.html,*.htm},<text/html>
 			\ lynx, links, w3m -dump -T text/html
 
-" Object
+" Object.
 filetype	{*.o},<application/x-object>
 			\ nm %f | less
 
-" Man page
+" Preview text files using "man".
 filetype	{*.[1-8]},<text/troff> man ./%c
 fileviewer	{*.[1-8]},<text/troff> man ./%c | col -b
 
-" MD5
+" MD5.
 filetype	*.md5
 			\ {Check MD5 hash sum}
 			\ md5sum -c %f %S,
 
-" SHA1
+" SHA1.
 filetype	*.sha1
 			\ {Check SHA1 hash sum}
 			\ sha1sum -c %f %S,
 
-" SHA256
+" SHA256.
 filetype	*.sha256
 			\ {Check SHA256 hash sum}
 			\ sha256sum -c %f %S,
 
-" SHA512
+" SHA512.
 filetype	*.sha512
 			\ {Check SHA512 hash sum}
 			\ sha512sum -c %f %S,
 
-" Mount .dmg archives
+" Mount .dmg archives.
 filetype	*.dmg open
 
-" Mount .img disks
+" Mount .img disks.
 filetype	*.img open
 
-" Open .pkg binaries
+" Open .pkg binaries.
 filetype	*.pkg open
 
-" Extract .bz2 archives
+" Extract .bz2 archives.
 filetype	*.bz2 bzip2 -d %f
 
-" Extract .gz files
+" Extract .gz files.
 filetype	*.gz gunzip %f
 
-" Extract zip files
+" Extract zip files.
 filetype	{*.zip},<application/zip,application/java-archive>
 			\ unzip %f
 fileviewer	{*.zip,*.jar,*.war,*.ear},
 			\<application/zip,application/java-archive>
 			\ zip -sf %c
 
-" Extract tar archives
+" Extract tar archives.
 filetype	{*.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz,*.tar.zst,*.tzst},
 			\<application/x-tar>
 			\ tar -xf %f
@@ -346,7 +356,7 @@ fileviewer	{*.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz,*.tar.zst,*.tzs
 			\<application/x-tar>
 			\ tar -tf %f
 
-" Office files
+" MS Office files.
 filetype {*.docx,*.doc,*.odt},
 			\<application/vnd.openxmlformats-officedocument.wordprocessingml*,
 			\application/vnd.ms-word*,
@@ -362,6 +372,10 @@ filetype {*.pptx,*.ppt,*.odp},
 			\application/vnd.ms-powerpoint*,
 			\application/mspowerpoint>
 			\ msppoint.sh &,
+
+" Enable ls colors in folder preview.
+fileviewer */ ls --color=always
+fileviewer .*/ ls --color=always
 
 " }}}
 
