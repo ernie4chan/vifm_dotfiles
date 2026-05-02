@@ -2,65 +2,96 @@
 " File: vifmrc
 " Maintainer: Ernie Lin
 "
-" Update 01: 2022-06-08
-" Update 02: 2024-07-01
+" v.1: 2022/06/08
+" v.2: 2024/07/01
+" v.3: 2026/05/02
 " ---------------------------------------------------------
 
-" {{{ Configuration.
+" {{{ Editor.
 
-" Colorschme: Picks the first one supported by the terminal.
-colorscheme afterglow
+" Pick the first available vi-compatible editor.
+if executable('vim')
+	set vicmd=vim
+elseif executable('nvim')
+	set vicmd=nvim
+elseif executable('elvis')
+	set vicmd=elvis\ -G\ termcap
+elseif executable('vile')
+	set vicmd=vile
+elseif $EDITOR != ''
+	echo 'Note: using `'.$EDITOR.'` as an editor'
+	let &vicmd = $EDITOR
+endif
 
-" Command used to edit files in various contexts for 'vi' clone such as:
-" Vim (default), Elvis or Vile.
-set vicmd=vim
+" }}}
 
-" This makes vifm perform file operations on its own instead of relying on
-" doesn't support progress measuring.
+" {{{ Appearance.
+
+" Colorschme: picks the first one supported by the terminal.
+colorscheme ansa
+
+" Status line layout.
+set statusline="  %t%= %A   | %8u:%-8g | %10E   | %25d   "
+
+" Customize view columns (enable ellipsis for truncated file names).
+set viewcolumns=-{name}..,6{size},16{mtime}.
+
+" Time format for the file list.
+set timefmt=%d/%m/%y\ %H:%M
+
+" }}}
+
+" {{{ Behavior.
+
+" Perform file operations natively instead of relying on external utilities.
 set syscalls
 
 " Trash Directory.
 set trash
 
-" With this option turned on you can run partially entered commands with
-" unambiguous beginning using :! (e.g. :!Te instead of :!Terminal or :!Te<tab>).
-set fastrun
-
-" This is how many directories to store in the directory history.
-set history=10000
-
-" Automatically resolve symbolic links on 'l' or 'Enter'.
+" Follow symbolic links on 'l' or Enter.
 set followlinks
 
-" Use Vim's format of help file (has highlighting and "hyperlinks").
-" If you installed the vim.txt help file set vimhelp.
-" If would rather use a plain text help file set novimhelp.
-set vimhelp
-"set novimhelp
-
-" Natural sort of (version) numbers within text.
+" Natural sort of version numbers within text.
 set sortnumbers
 
-" Maximum number of changes that can be undone.
-set undolevels=100
-
-" If you would like to run an executable file when you press
-" 'Enter', 'l' or Right Arrow, set this.
+" Do not execute files on Enter or 'l'.
 set norunexec
 
-" Don't do too many requests to slow file systems.
+" Allow partial command execution when unambiguous (e.g. :!Te → :!Terminal).
+set fastrun
+
+" Number of directories to keep in history.
+set history=10000
+
+" Maximum number of undoable changes.
+set undolevels=100
+
+" Persist session data between vifm restarts.
+set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
+    \phistory,fhistory,dirstack,registers,bookmarks,bmarks
+
+" Use Vim-style help with highlighting and hyperlinks.
+set vimhelp
+
+" If would rather use a plain text help file set novimhelp.
+"set novimhelp
+
+" Skip slow/remote filesystems for metadata requests.
 if !has('win')
 	set slowfs=curlftpfs
 endif
 
-" What should be saved automatically between vifm sessions.  Drop "savedirs"
-" value if you don't want vifm to remember last visited directories for you.
-set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
-    \phistory,fhistory,dirstack,registers,bookmarks,bmarks
+" Suppress "Permission denied" errors with GNU find
+if system("find --version | grep -c 'GNU findutils'") != 0
+	set findprg='find %s %a -print , -type d \( ! -readable -o ! -executable \) -prune'
+endif
 
-" Display suggestions in normal, visual and view modes for keys, marks and
-"  registers (at most 5 files). In other view, when available.
-set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
+" Try to leave some space from cursor to upper/lower border in lists.
+set scrolloff=2
+
+" Grep program with suppressed permission errors.
+set grepprg="grep -n -H -I -r -s %i %a %s"
 
 " Show list of matches on tab completion in command-line mode.
 set wildmenu
@@ -68,35 +99,25 @@ set wildmenu
 " Display completions in a form of popup with descriptions of the matches.
 set wildstyle=popup
 
+" Display suggestions in normal, visual and view modes for keys, marks and
+"  registers (at most 5 files). In other view, when available.
+set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
+
 " Ignore case in search patterns.
 set ignorecase
+
+" Override ignorecase when pattern contains uppercase.
 set smartcase
 
-" Don't highlight but use increment searching.
-set incsearch
-set nohlsearch
+" Disable incremental search.
+set noincsearch
 
-" Try to leave some space from cursor to upper/lower border in lists.
-set scrolloff=2
-
-" Set custom status line look.
-"				rights | user:group | size | date | file name | space left
-"set statusline="%1* %-10t  %N %4* %10d %2* owner:%u:%-7g %5* size:%s  %3* attr:%A"
-"set statusline="%10A | %10u:%-7g  | %10E | %15d | %-35f     | Space left: %-5a "
-set statusline=" %t%= %A %10u:%-7g %15s %20d  "
-
-" Format for displaying time in file list. For example:
-set timefmt=%d/%m/%y\ %H:%M
-
-" Customize view columns a bit (enable ellipsis for truncated file names):
-set viewcolumns=-{name}..,6{size},16{mtime}.
-
-" Filter-out build and temporary files
-"filter! /^.*\.(lo|o|d|class|py[co])$|.*~$/
+" Highlight all matches after search is confirmed.
+set hlsearch
 
 " }}}
 
-" {{{ Marks.
+" {{{ Bookmarks.
 
 " :mark mark /full/directory/path [filename]
 mark d ~/Descargas
@@ -127,6 +148,7 @@ command! make !!make %a
 command! mkcd :mkdir %a | cd %a
 command! reload :write | restart full
 
+" Fuzzy file search using fzf.
 command! FZFfind : set noquickview
 				\| let $FZF_PICK = system('find | fzf 2>/dev/tty')
 				\| if $FZF_PICK != ''
@@ -138,34 +160,57 @@ command! FZFfind : set noquickview
 
 " {{{ Mappings.
 
-" Start shell in current directory.
-nnoremap s :shell<cr>
+" --- Navigation ---
 
-" Display sorting dialog.
-nnoremap S :sort<cr>
+" Fuzzy search files.
+nnoremap <c-t> :FZFfind <cr>
 
-" Toggle visibility of preview window.
-nnoremap w :view<cr>
-vnoremap w :view<cr>gv
+" Toggle showing hidden files.
+nnoremap . za
 
-" Open file in new Visual Code tab.
-nnoremap o :!code %f<cr>
-" Open file in new Visual Code window.
-nnoremap O :!code --new-window %f<cr>
+" MC-like: Open current directory in the other pane.
+nnoremap <a-i> :sync<cr>
 
-" Open file in the background using its default program.
-nnoremap gb :!open -g %f<cr>
+" MC-like: Open directory under cursor in the other pane.
+nnoremap <a-o> :sync %c<cr>
 
-" Mappings for faster renaming.
-nnoremap A cw
-nnoremap I cw<c-a>
-nnoremap cc cw<c-u>
+" MC-like: Swap panes.
+nnoremap <c-u> <c-w>x
 
-" Toggle wrap setting on ',w' key.
-nnoremap ,w :set wrap!<cr>
+" --- Panes ---
 
-" Open editor to edit 'vifmrc' and apply settings after returning to Vifm.
-nnoremap ,c :write | edit $MYVIFMRC | restart full<cr>
+" Equalize pane sizes.
+nnoremap | <c-w>=
+
+" Increase/decrease pane width.
+nnoremap ]w 5<c-w>>
+nnoremap [w 5<c-w><
+
+" Increase/decrease pane height.
+nnoremap ]h 5<c-w>+
+nnoremap [h 5<c-w>-
+
+" Toggle zoom on current pane.
+nnoremap ZO :only<cr>
+
+" Restore vertical double panel.
+nnoremap ZV :vsplit<cr>
+
+" Restore horizontal double panel.
+nnoremap ZS :split<cr>
+
+" --- Tabs ---
+
+" Create new tab.
+nnoremap ,t :tabnew<cr>:view!<cr>
+
+" Switch to tab to the left.
+nnoremap ,h :tabprevious<cr>:view!<cr>
+
+" Switch to tab to the right.
+nnoremap ,l :tabnext<cr>:view!<cr>
+
+" --- File Operations ---
 
 " Example of standard two-panel file managers mappings.
 nnoremap <f3> :!less %f<cr>
@@ -176,206 +221,237 @@ nnoremap <f7> :mkdir<space>
 nnoremap <f8> :delete<cr>
 nnoremap <f9> :touch<space>
 
-" MC-like: Open current directory in the other pane.
-nnoremap <a-i> :sync<cr>
-" MC-like: Open directory under cursor in the other pane.
-nnoremap <a-o> :sync %c<cr>
-" MC-like: Swap panes.
-"nnoremap <c-u> <c-w>x
+" --- Editing ---
 
-" Toggle showing hidden files.
-nnoremap . za
+" Rename keeping extension: cursor at end, start, or clear.
+nnoremap A  cw
+nnoremap I  cw<c-a>
+nnoremap cc cw<c-u>
 
-" Fuzzy search files.
-nnoremap / :FZFfind <cr>
+" Rename without extension: cursor at end, start, or clear.
+nnoremap a  cW
+nnoremap i  cW<c-a>
+nnoremap CC cW<c-u>
 
-" create new tab
-nnoremap ,t :tabnew<cr>:view!<cr>
+" Toggle line wrap.
+nnoremap ,w :set wrap!<cr>:if &wrap | echo 'Wrap on' | else | echo 'Wrap off' | endif<cr>
 
-" switch to tab to the left
-nnoremap ,h :tabprevious<cr>:view!<cr>
+" Open editor to edit 'vifmrc' and apply settings after returning to Vifm.
+nnoremap ,c :write | edit $MYVIFMRC | restart full<cr>
 
-" switch to tab to the left
-nnoremap ,l :tabnext<cr>:view!<cr>
+" Start shell in current directory.
+nnoremap s :shell<cr>
 
-" Interaction with system clipboard.
-if has('win')
-	" Yank current directory path to Windows clipboard with forward slashes.
-	nnoremap yp :!echo %"d:gs!\!/! %i | clip<cr>
-	" Yank path to current file to Windows clipboard with forward slashes.
+" Display sorting dialog.
+nnoremap S :sort<cr>
+
+" Toggle visibility of preview window.
+nnoremap w :view<cr>
+vnoremap w :view<cr>gv
+
+" --- Open With ---
+
+" Open file in the background using its default program
+nnoremap gb :file &<cr>l
+
+if executable('code')
+	" Open file in VS Code tab.
+	nnoremap o :!code %f<cr>
+	" Open file in VS Code new window.
+	nnoremap O :!code --new-window %f<cr>
+endif
+
+" }}}
+
+" {{{ Copy & Paste.
+
+" yd = yank current directory path.
+" yf = yank full file path.
+" yn = yank filename.
+" yr = yank filename without extension.
+
+if executable('clip.exe') && executable('wslpath')
+	" WSL2: pipe to clip.exe; no trailing newline (-n).
+	nnoremap yd :!echo -n %d | clip.exe %i<cr>
+	nnoremap yf :!echo -n %c:p | clip.exe %i<cr>
+	nnoremap yn :!echo -n %c | clip.exe %i<cr>
+	nnoremap yr :!echo -n %c:r | clip.exe %i<cr>
+elseif has('win')
+	" Native Windows: convert slashes for compatibility.
+	nnoremap yd :!echo %"d:gs!\!/! %i | clip<cr>
 	nnoremap yf :!echo %"c:gs!\!/! %i | clip<cr>
+	nnoremap yn :!echo %"c:gs!\!/! %i | clip<cr>
+	nnoremap yr :!echo %"c:r:gs!\!/! %i | clip<cr>
 elseif has('mac')
-	" Yank current directory path into the clipboard.
 	nnoremap yd :!printf %d | pbcopy<cr>
-	" Yank current file path into the clipboard.
 	nnoremap yf :!printf %c:p | pbcopy<cr>
+	nnoremap yn :!printf %c | pbcopy<cr>
+	nnoremap yr :!printf %c:r | pbcopy<cr>
 elseif executable('wl-copy')
-	" Yank current directory path into primary and selection clipboards.
 	nnoremap yd :!echo -n %d | wl-copy %i<cr>
-	" Yank current file path into into primary and selection clipboards.
 	nnoremap yf :!echo -n %c:p | wl-copy %i<cr>
-	" yank current filename without path into primary and selection clipboards.
 	nnoremap yn :!echo -n %c | wl-copy %i<cr>
-	" yank root of current file's name into primary and selection clipboards.
 	nnoremap yr :!echo -n %c:r | wl-copy %i<cr>
 elseif executable('xclip')
-	" Yank current directory path into the clipboard.
-	nnoremap yd :!echo %d | xclip %i<cr>
-	" Yank current file path into the clipboard.
-	nnoremap yf :!echo %c:p | xclip %i<cr>
-	" yank current filename without path into the clipboard.
+	nnoremap yd :!echo -n %d | xclip %i<cr>
+	nnoremap yf :!echo -n %c:p | xclip %i<cr>
 	nnoremap yn :!echo -n %c | xclip %i<cr>
-	" yank root of current file's name into the clipboard.
 	nnoremap yr :!echo -n %c:r | xclip %i<cr>
 elseif executable('xsel')
-	" Yank current directory path into primary and selection clipboards.
 	nnoremap yd :!echo -n %d | xsel --input --primary %i &&
-				\ echo -n %d | xsel --clipboard --input %i<cr>
-	" Yank current file path into into primary and selection clipboards.
+		\ echo -n %d | xsel --clipboard --input %i<cr>
 	nnoremap yf :!echo -n %c:p | xsel --input --primary %i &&
-				\ echo -n %c:p | xsel --clipboard --input %i<cr>
-	" yank current filename without path into primary and selection clipboards.
+		\ echo -n %c:p | xsel --clipboard --input %i<cr>
 	nnoremap yn :!echo -n %c | xsel --input --primary %i &&
-				\ echo -n %c | xsel --clipboard --input %i<cr>
-	" yank root of current file's name into primary and selection clipboards.
+		\ echo -n %c | xsel --clipboard --input %i<cr>
 	nnoremap yr :!echo -n %c:r | xsel --input --primary %i &&
-				\ echo -n %c:r | xsel --clipboard --input %i<cr>
+		\ echo -n %c:r | xsel --clipboard --input %i<cr>
 endif
 
 " }}}
 
 " {{{ File Types.
-
 " :filetype pattern1,pattern2 defaultprogram,program2
 " :fileviewer pattern1,pattern2 consoleviewer
 
-" Image.
-filetype	{*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
+" --- Images ---
+filetype	{*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},
+			\<image/*>
 			\ {Open in Irfanview}
-			\ i_view64.exe %f &,
-fileviewer	{*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
-			\ identify %f
+			\ cmd.exe /c start
+			\ "O:\\Scoop\\Local\\apps\\irfanview\\current\\i_view64.exe"
+			\ "$(wslpath -w %c)" &
+fileviewer	{*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},
+			\<image/*>
+			\ cmd.exe /c
+			\ "O:\\Scoop\\Local\\apps\\ffmpeg\\current\\bin\\ffprobe.exe"
+			\ -hide_banner
+			\ "$(wslpath -w %c)" 2>&1
 
-" Pdf.
-filetype	{*.pdf},<application/pdf>
-			\ {Open in Acrobat}
-			\ acrobat.sh &,
-fileviewer	{*.pdf},<application/pdf>
-			\ pdftotext -nopgbrk %c -
-
-" PostScript.
-"filetype	{*.ps,*.eps,*.ps.gz},<application/postscript>
-
-" Audio.
-filetype	{*.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus},
+" --- Audio ---
+filetype	{*.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus,
+			\*.aac,*.mpga},
 			\<audio/*>
-			\ {Open in VLC}
-			\ vlc.sh &,
-fileviewer	*.mp3 mp3info
+			\ {Play in ffplay}
+			\ cmd.exe /c
+			\ "O:\\Scoop\\Local\\apps\\ffmpeg\\current\\bin\\ffplay.exe"
+			\ -nodisp -hide_banner -autoexit
+			\ "$(wslpath -w %c)" &
+fileviewer	{*.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus,
+			\*.aac,*.mpga},
+			\<audio/*>
+			\ cmd.exe /c
+			\ "O:\\Scoop\\Local\\apps\\ffmpeg\\current\\bin\\ffprobe.exe"
+			\ -hide_banner -pretty
+			\ "$(wslpath -w %c)" 2>&1
 
-" Video.
+" --- Video ---
 filetype	{*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
 			\*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
 			\*.as[fx]},
 			\<video/*>
-			\ {Open in VLC}
-			\ vlc.sh &,
+			\ {Play in ffplay}
+			\ cmd.exe /c
+			\ "O:\\Scoop\\Local\\apps\\ffmpeg\\current\\bin\\ffplay.exe"
+			\ -hide_banner -autoexit
+			\ "$(wslpath -w %c)" &
 fileviewer	{*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
 			\*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
 			\*.as[fx]},
 			\<video/*>
-			\ ffprobe.sh &,
+			\ cmd.exe /c
+			\ "O:\\Scoop\\Local\\apps\\ffmpeg\\current\\bin\\ffprobe.exe"
+			\ -hide_banner -pretty
+			\ "$(wslpath -w %c)" 2>&1
 
-" Torrent.
-filetype	{*.torrent},<application/x-bittorrent>
-			\ {Open in qBittorent}
-			\ qbittorrent.sh &,
+" --- Pdf ---
+filetype	{*.pdf},<application/pdf>
+			\ {Open in Acrobat}
+			\ cmd.exe /c start
+			\ "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe"
+			\ "$(wslpath -w %c)" &
+fileviewer	{*.pdf},<application/pdf>
+			\ strings %c | head -50
 
-" Web.
-filetype	{*.html,*.htm},<text/html>
-			\ {Open in vim}
-			\ vim,
-fileviewer	{*.html,*.htm},<text/html>
-			\ lynx, links, w3m -dump -T text/html
-
-" Object.
-filetype	{*.o},<application/x-object>
-			\ nm %f | less
-
-" Preview text files using "man".
+" --- man page ---
 filetype	{*.[1-8]},<text/troff> man ./%c
 fileviewer	{*.[1-8]},<text/troff> man ./%c | col -b
 
-" MD5.
-filetype	*.md5
-			\ {Check MD5 hash sum}
-			\ md5sum -c %f %S,
+" --- Web ---
+filextype	{*.xhtml,*.html,*.htm},<text/html>
+			\ {Open with Brave}
+			\ cmd.exe /c start
+			\ "C:\\Users\\ernie4chan\\AppData\\Local\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
+			\ "$(wslpath -w %c)" &
+filetype	{*.xhtml,*.html,*.htm},<text/html> lynx
 
-" SHA1.
-filetype	*.sha1
-			\ {Check SHA1 hash sum}
-			\ sha1sum -c %f %S,
+" --- MS Office ---
+filetype	{*.xlsx,*.xls,*.ods},
+			\<application/vnd.openxmlformats-officedocument.spreadsheetml*,
+			\application/vnd.ms-excel*,application/msexcel>
+			\ {Open in Excel}
+			\ cmd.exe /c start
+			\ "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+			\ "$(wslpath -w %c)" &
+filetype	{*.docx,*.doc,*.odt},
+			\<application/vnd.openxmlformats-officedocument.wordprocessingml*,
+			\application/vnd.ms-word*,application/msword>
+			\ {Open in Word}
+			\ cmd.exe /c start
+			\ "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+			\ "$(wslpath -w %c)" &
+filetype	{*.pptx,*.ppt,*.odp},
+			\<application/vnd.openxmlformats-officedocument.presentationml*,
+			\application/vnd.ms-powerpoint*,application/mspowerpoint>
+			\ {Open in PowerPoint}
+			\ cmd.exe /c start
+			\ "C:\\Program Files\\Microsoft Office\\root\\Office16\\POWERPNT.EXE"
+			\ "$(wslpath -w %c)" &
 
-" SHA256.
-filetype	*.sha256
-			\ {Check SHA256 hash sum}
-			\ sha256sum -c %f %S,
+" --- Torrent ---
+filetype	{*.torrent},<application/x-bittorrent>
+			\ {Open in qBittorrent}
+			\ cmd.exe /c start
+			\ "O:\\Scoop\\Local\\apps\\qbittorrent\\current\\qbittorrent.exe"
+			\ "$(wslpath -w %c)" &
+fileviewer	{*.torrent},<application/x-bittorrent>
+			\ strings %c
 
-" SHA512.
-filetype	*.sha512
-			\ {Check SHA512 hash sum}
-			\ sha512sum -c %f %S,
+" --- GPG signature ---
+filetype {*.asc},<application/pgp-signature>
+       \ {Check signature} !!gpg --verify %c
 
-" Mount .dmg archives.
-filetype	*.dmg open
+" --- Checksums ---
+filetype	*.md5		{Check MD5 hash sum}		md5sum -c %f %S
+filetype	*.sha1		{Check SHA1 hash sum}		sha1sum -c %f %S
+filetype	*.sha256	{Check SHA256 hash sum}		sha256sum -c %f %S
+filetype	*.sha512	{Check SHA512 hash sum}		sha512sum -c %f %S
 
-" Mount .img disks.
-filetype	*.img open
+" --- Object Files ---
+filetype	{*.o},<application/x-object> nm %f | less
 
-" Open .pkg binaries.
-filetype	*.pkg open
+" --- Archives ---
+filetype	*.bz2	bzip2 -d %f
+filetype	*.gz	gunzip %f
 
-" Extract .bz2 archives.
-filetype	*.bz2 bzip2 -d %f
-
-" Extract .gz files.
-filetype	*.gz gunzip %f
-
-" Extract zip files.
-filetype	{*.zip},<application/zip,application/java-archive>
-			\ unzip %f
-fileviewer	{*.zip,*.jar,*.war,*.ear},
+filetype	{*.zip,*.jar,*.war,*.ear,*.oxt},
 			\<application/zip,application/java-archive>
-			\ zip -sf %c
+			\ {View contents} unzip -l %c | less,
+			\ {Extract here} unzip %f
+fileviewer	{*.zip,*.jar,*.war,*.ear,*.oxt},
+			\<application/zip,application/java-archive>
+			\ unzip -l %c
 
-" Extract tar archives.
 filetype	{*.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz,*.tar.zst,*.tzst},
 			\<application/x-tar>
 			\ tar -xf %f
 fileviewer	{*.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz,*.tar.zst,*.tzst},
 			\<application/x-tar>
-			\ tar -tf %f
-
-" MS Office files.
-filetype {*.docx,*.doc,*.odt},
-			\<application/vnd.openxmlformats-officedocument.wordprocessingml*,
-			\application/vnd.ms-word*,
-			\application/msword>
-			\ msword.sh &,
-filetype {*.xlsx,*.xls,*.ods},
-			\<application/vnd.openxmlformats-officedocument.spreadsheetml*,
-			\application/vnd.ms-excel*,
-			\application/msexcel>
-			\ msexcel.sh &,
-filetype {*.pptx,*.ppt,*.odp},
-			\<application/vnd.openxmlformats-officedocument.presentationml*,
-			\application/vnd.ms-powerpoint*,
-			\application/mspowerpoint>
-			\ msppoint.sh &,
+			\ tar -tf %c
 
 " }}}
 
-" {{{ Script files.
+" {{{ Plugins.
 
 " New icon set for vifm.
 source ~/.config/vifm/scripts/vifm_devicons/favicons.vifm
