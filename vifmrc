@@ -1,7 +1,8 @@
 " ---------------------------------------------------------
-" File: vifmrc
+" vim: filetype=vifm :
+" Title: Vifm Run Commands
+" File: ~/.config/vifm/vifmrc
 " Maintainer: Ernie Lin
-"
 " v.1: 2022/06/08
 " v.2: 2024/07/01
 " v.3: 2026/05/02
@@ -166,21 +167,15 @@ command! FZFfind : set noquickview
 nnoremap <c-t> :FZFfind <cr>
 
 " Toggle showing hidden files.
-nnoremap . za
+"nnoremap . za
 
-" MC-like: Open current directory in the other pane.
+" MC-like: Mirror current directory in the other pane.
 nnoremap <a-i> :sync<cr>
 
 " MC-like: Open directory under cursor in the other pane.
 nnoremap <a-o> :sync %c<cr>
 
-" MC-like: Swap panes.
-nnoremap <c-u> <c-w>x
-
 " --- Panes ---
-
-" Equalize pane sizes.
-nnoremap | <c-w>=
 
 " Increase/decrease pane width.
 nnoremap ]w 5<c-w>>
@@ -190,14 +185,17 @@ nnoremap [w 5<c-w><
 nnoremap ]h 5<c-w>+
 nnoremap [h 5<c-w>-
 
+" Equalize pane sizes.
+nnoremap ]= <c-w>=
+
 " Toggle zoom on current pane.
-nnoremap ZO :only<cr>
+nnoremap [= :only<cr>
 
 " Restore vertical double panel.
-nnoremap ZV :vsplit<cr>
+nnoremap ]v :vsplit<cr>
 
 " Restore horizontal double panel.
-nnoremap ZS :split<cr>
+nnoremap [v :split<cr>
 
 " --- Tabs ---
 
@@ -229,9 +227,9 @@ nnoremap I  cw<c-a>
 nnoremap cc cw<c-u>
 
 " Rename without extension: cursor at end, start, or clear.
-nnoremap a  cW
-nnoremap i  cW<c-a>
-nnoremap CC cW<c-u>
+"nnoremap A  cW
+nnoremap cI cW<c-a>
+nnoremap c$ cW<c-u>
 
 " Toggle line wrap.
 nnoremap ,w :set wrap!<cr>:if &wrap | echo 'Wrap on' | else | echo 'Wrap off' | endif<cr>
