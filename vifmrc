@@ -1,7 +1,7 @@
 " ---------------------------------------------------------
-" vim: filetype=vifm :
-" Title: Vifm Run Commands
+" vim: filetype=vifm
 " File: ~/.config/vifm/vifmrc
+" Title: Vifm Run Commands
 " Maintainer: Ernie Lin
 " v.1: 2022/06/08
 " v.2: 2024/07/01
