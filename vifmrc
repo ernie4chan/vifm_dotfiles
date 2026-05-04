@@ -168,7 +168,7 @@ command! FZFfind : set noquickview
 " --- Navigation ---
 
 " Fuzzy search files.
-nnoremap <c-t> :FZFfind <cr>
+nnoremap <c-t> :FZFfind<cr>
 
 " Toggle showing hidden files.
 "nnoremap . za
@@ -222,6 +222,9 @@ nnoremap <f6> :move<cr>
 nnoremap <f7> :mkdir<space>
 nnoremap <f8> :delete<cr>
 nnoremap <f9> :touch<space>
+" Toggle line wrap.
+nnoremap <f10> :set wrap!<cr>:if &wrap | echo 'Wrap on' | else | echo 'Wrap off' | endif<cr>
+
 
 " --- Editing ---
 
@@ -234,9 +237,6 @@ nnoremap cc cw<c-u>
 "nnoremap A  cW
 nnoremap cI cW<c-a>
 nnoremap c$ cW<c-u>
-
-" Toggle line wrap.
-nnoremap ,w :set wrap!<cr>:if &wrap | echo 'Wrap on' | else | echo 'Wrap off' | endif<cr>
 
 " Open editor to edit 'vifmrc' and apply settings after returning to Vifm.
 nnoremap ,c :write | edit $MYVIFMRC | restart full<cr>
