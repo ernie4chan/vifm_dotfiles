@@ -26,10 +26,13 @@ endif
 
 " }}}
 
-" {{{ Appearance.
+" {{{ Display.
 
 " Colorschme: picks the first one supported by the terminal.
 colorscheme gruvbox
+
+" Try to leave some space from cursor to upper/lower border in lists.
+set scrolloff=2
 
 " Status line layout.
 set statusline="  %t%= %A   | %8u:%-8g | %10E   | %25d   "
@@ -101,9 +104,6 @@ set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
 " }}}
 
 " {{{ Searching.
-
-" Try to leave some space from cursor to upper/lower border in lists.
-set scrolloff=2
 
 " Grep program with suppressed permission errors.
 set grepprg="grep -n -H -I -r -s %i %a %s"
