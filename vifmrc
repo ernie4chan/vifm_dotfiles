@@ -170,16 +170,27 @@ command! FZFfind : set noquickview
 " Fuzzy search files.
 nnoremap <c-t> :FZFfind<cr>
 
-" Toggle showing hidden files.
-"nnoremap . za
-
 " MC-like: Mirror current directory in the other pane.
 nnoremap <a-i> :sync<cr>
 
 " MC-like: Open directory under cursor in the other pane.
 nnoremap <a-o> :sync %c<cr>
 
-" --- Panes ---
+" Toggle showing hidden files.
+"nnoremap . za
+
+" --- Workspace ---
+
+nnoremap ,t :tabnew<cr>
+nnoremap ,h :tabprevious<cr>
+nnoremap ,l :tabnext<cr>
+nnoremap ,q	:tabclose<cr>
+
+" Equalize pane sizes.
+nnoremap ]= <c-w>=
+
+" Toggle zoom on current pane.
+nnoremap [= :only<cr>
 
 " Increase/decrease pane width.
 nnoremap ]w 5<c-w>>
@@ -189,22 +200,9 @@ nnoremap [w 5<c-w><
 nnoremap ]h 5<c-w>+
 nnoremap [h 5<c-w>-
 
-" Equalize pane sizes.
-nnoremap ]= <c-w>=
-
-" Toggle zoom on current pane.
-nnoremap [= :only<cr>
-
 " Restore vertical/horizontal double panel.
 nnoremap ]v :vsplit<cr>
 nnoremap [v :split<cr>
-
-" --- Tabs ---
-
-nnoremap ,t :tabnew<cr>
-nnoremap ,h :tabprevious<cr>
-nnoremap ,l :tabnext<cr>
-nnoremap ,q	:tabclose<cr>
 
 " --- File Operations ---
 
@@ -232,9 +230,6 @@ nnoremap R	cW<c-u>
 nnoremap cb	cw<c-a>
 nnoremap cc	cw<c-u>
 
-" Open editor to edit 'vifmrc' and apply settings after returning to Vifm.
-nnoremap ,e :write | edit $MYVIFMRC | restart full<cr>
-
 " Start shell in current directory.
 nnoremap s :shell<cr>
 
@@ -244,6 +239,9 @@ nnoremap S :sort<cr>
 " Toggle visibility of preview window.
 nnoremap w :view<cr>
 vnoremap w :view<cr>gv
+
+" Open editor to edit 'vifmrc' and apply settings after returning to Vifm.
+nnoremap ,e :write | edit $MYVIFMRC | restart full<cr>
 
 " --- Open With ---
 
