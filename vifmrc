@@ -29,7 +29,7 @@ endif
 " {{{ Appearance.
 
 " Colorschme: picks the first one supported by the terminal.
-colorscheme ansa
+colorscheme gruvbox
 
 " Status line layout.
 set statusline="  %t%= %A   | %8u:%-8g | %10E   | %25d   "
