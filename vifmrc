@@ -195,22 +195,16 @@ nnoremap ]= <c-w>=
 " Toggle zoom on current pane.
 nnoremap [= :only<cr>
 
-" Restore vertical double panel.
+" Restore vertical/horizontal double panel.
 nnoremap ]v :vsplit<cr>
-
-" Restore horizontal double panel.
 nnoremap [v :split<cr>
 
 " --- Tabs ---
 
-" Create new tab.
-nnoremap ,t :tabnew<cr>:view!<cr>
-
-" Switch to tab to the left.
-nnoremap ,h :tabprevious<cr>:view!<cr>
-
-" Switch to tab to the right.
-nnoremap ,l :tabnext<cr>:view!<cr>
+nnoremap ,t :tabnew<cr>
+nnoremap ,h :tabprevious<cr>
+nnoremap ,l :tabnext<cr>
+nnoremap ,q	:tabclose<cr>
 
 " --- File Operations ---
 
@@ -221,25 +215,25 @@ nnoremap <f5> :copy<cr>
 nnoremap <f6> :move<cr>
 nnoremap <f7> :mkdir<space>
 nnoremap <f8> :delete<cr>
-nnoremap <f9> :touch<space>
+nnoremap <f10> :quit<cr>
+nnoremap <f12> :touch<space>
 " Toggle line wrap.
-nnoremap <f10> :set wrap!<cr>:if &wrap | echo 'Wrap on' | else | echo 'Wrap off' | endif<cr>
-
+nnoremap <f9> :set wrap!<cr>:if &wrap | echo 'Wrap on' | else | echo 'Wrap off' | endif<cr>
 
 " --- Editing ---
 
-" Rename keeping extension: cursor at end, start, or clear.
-nnoremap A  cw
-nnoremap I  cw<c-a>
-nnoremap cc cw<c-u>
+" Rename without the extension: cursor at end, start, or clear.
+nnoremap A	cW
+nnoremap I	cW<c-a>
+nnoremap R	cW<c-u>
 
-" Rename without extension: cursor at end, start, or clear.
-"nnoremap A  cW
-nnoremap cI cW<c-a>
-nnoremap c$ cW<c-u>
+" Rename including the extension: cursor at end, start, or clear.
+"nnoremap A	cw
+nnoremap cb	cw<c-a>
+nnoremap cc	cw<c-u>
 
 " Open editor to edit 'vifmrc' and apply settings after returning to Vifm.
-nnoremap ,c :write | edit $MYVIFMRC | restart full<cr>
+nnoremap ,e :write | edit $MYVIFMRC | restart full<cr>
 
 " Start shell in current directory.
 nnoremap s :shell<cr>
