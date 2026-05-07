@@ -202,11 +202,11 @@ nnoremap \= <C-W>=
 nnoremap \- <CR>_
 
 " Decrease/increase pane width.
-nnoremap \3 5<C-W><
-nnoremap \5 5<C-W>>
+nnoremap \1 5<C-W><
+nnoremap \2 5<C-W>>
 
 " Decrease/increase pane height.
-nnoremap \r 5<C-W>-
+nnoremap \3 5<C-W>-
 nnoremap \4 5<C-W>+
 
 " --- File Operations ---
