@@ -187,8 +187,7 @@ nnoremap \l <C-W>l
 nnoremap \m <C-W>b
 nnoremap \n <C-W>t
 
-" Move and switch panes.
-nnoremap \w <C-W>w
+" Switch panes.
 nnoremap \x <C-W>x
 
 " Tab manipulation.
@@ -247,9 +246,13 @@ nnoremap s :shell<CR>
 " Display sorting dialog.
 nnoremap S :sort<CR>
 
-" Toggle visibility of preview window.
+" Toggle visibility of preview and tree window.
 nnoremap w :view<CR>
 vnoremap w :view<CR>gv
+nnoremap at :tree!<CR>
+
+" Ranger's miller columns.
+nnoremap ar :set millerview!<CR>
 
 " Open editor to edit 'vifmrc' and apply settings after returning to Vifm.
 nnoremap \ce :write | edit $MYVIFMRC | restart full<CR>
