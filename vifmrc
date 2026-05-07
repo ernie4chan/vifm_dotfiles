@@ -178,6 +178,7 @@ nnoremap <A-O> :sync %c<CR>
 
 " --- Workspace ---
 
+" Move between panes.
 nnoremap \h <C-W>h
 nnoremap \j <C-W>j
 nnoremap \k <C-W>k
@@ -185,13 +186,20 @@ nnoremap \l <C-W>l
 
 nnoremap \m <C-W>b
 nnoremap \n <C-W>t
+
+" Move and switch panes.
 nnoremap \w <C-W>w
 nnoremap \x <C-W>x
 
+" Tab manipulation.
 nnoremap \q	:tabclose<CR>
 nnoremap \t :tabnew<CR>
 nnoremap \; :tabprevious<CR>
 nnoremap \' :tabnext<CR>
+
+" Restore vertical/horizontal double panel.
+nnoremap \v :vsplit<CR>
+nnoremap \s :split<CR>
 
 " Equalize pane sizes.
 nnoremap \= <C-W>=
@@ -206,10 +214,6 @@ nnoremap \5 5<C-W>>
 " Decrease/increase pane height.
 nnoremap \r 5<C-W>-
 nnoremap \4 5<C-W>+
-
-" Restore vertical/horizontal double panel.
-nnoremap \v :vsplit<CR>
-nnoremap \s :split<CR>
 
 " --- File Operations ---
 
