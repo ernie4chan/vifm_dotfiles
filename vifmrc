@@ -168,91 +168,98 @@ command! FZFfind : set noquickview
 " --- Navigation ---
 
 " Fuzzy search files.
-nnoremap <c-t> :FZFfind<cr>
+nnoremap <C-T> :FZFfind<CR>
 
 " MC-like: Mirror current directory in the other pane.
-nnoremap <a-i> :sync<cr>
+nnoremap <A-I> :sync<CR>
 
 " MC-like: Open directory under cursor in the other pane.
-nnoremap <a-o> :sync %c<cr>
-
-" Toggle showing hidden files.
-"nnoremap . za
+nnoremap <A-O> :sync %c<CR>
 
 " --- Workspace ---
 
-nnoremap ,t :tabnew<cr>
-nnoremap ,h :tabprevious<cr>
-nnoremap ,l :tabnext<cr>
-nnoremap ,q	:tabclose<cr>
+nnoremap \h <C-W>h
+nnoremap \j <C-W>j
+nnoremap \k <C-W>k
+nnoremap \l <C-W>l
+
+nnoremap \m <C-W>b
+nnoremap \n <C-W>t
+nnoremap \w <C-W>w
+nnoremap \x <C-W>x
+
+nnoremap \q	:tabclose<CR>
+nnoremap \t :tabnew<CR>
+nnoremap \; :tabprevious<CR>
+nnoremap \' :tabnext<CR>
 
 " Equalize pane sizes.
-nnoremap ]= <c-w>=
+nnoremap \= <C-W>=
 
 " Toggle zoom on current pane.
-nnoremap [= :only<cr>
+nnoremap \- <CR>_
 
-" Increase/decrease pane width.
-nnoremap ]w 5<c-w>>
-nnoremap [w 5<c-w><
+" Decrease/increase pane width.
+nnoremap \3 5<C-W><
+nnoremap \5 5<C-W>>
 
-" Increase/decrease pane height.
-nnoremap ]h 5<c-w>+
-nnoremap [h 5<c-w>-
+" Decrease/increase pane height.
+nnoremap \r 5<C-W>-
+nnoremap \4 5<C-W>+
 
 " Restore vertical/horizontal double panel.
-nnoremap ]v :vsplit<cr>
-nnoremap [v :split<cr>
+nnoremap \v :vsplit<CR>
+nnoremap \s :split<CR>
 
 " --- File Operations ---
 
 " Example of standard two-panel file managers mappings.
-nnoremap <f3> :!less %f<cr>
-nnoremap <f4> :edit<cr>
-nnoremap <f5> :copy<cr>
-nnoremap <f6> :move<cr>
-nnoremap <f7> :mkdir<space>
-nnoremap <f8> :delete<cr>
-nnoremap <f10> :quit<cr>
-nnoremap <f12> :touch<space>
+nnoremap <F3> :!less %f<CR>
+nnoremap <F4> :edit<CR>
+nnoremap <F5> :copy<CR>
+nnoremap <F6> :move<CR>
+nnoremap <F7> :mkdir<space>
+nnoremap <F8> :delete<CR>
+nnoremap <F10> :quit<CR>
+nnoremap <F12> :touch<space>
 " Toggle line wrap.
-nnoremap <f9> :set wrap!<cr>:if &wrap | echo 'Wrap on' | else | echo 'Wrap off' | endif<cr>
+nnoremap <F9> :set wrap!<CR>:if &wrap | echo 'Wrap on' | else | echo 'Wrap off' | endif<CR>
 
 " --- Editing ---
 
 " Rename without the extension: cursor at end, start, or clear.
 nnoremap A	cW
-nnoremap I	cW<c-a>
-nnoremap R	cW<c-u>
+nnoremap I	cW<C-A>
+nnoremap R	cW<C-U>
 
 " Rename including the extension: cursor at end, start, or clear.
 "nnoremap A	cw
-nnoremap cb	cw<c-a>
-nnoremap cc	cw<c-u>
+nnoremap cb	cw<C-A>
+nnoremap cc	cw<C-U>
 
 " Start shell in current directory.
-nnoremap s :shell<cr>
+nnoremap s :shell<CR>
 
 " Display sorting dialog.
-nnoremap S :sort<cr>
+nnoremap S :sort<CR>
 
 " Toggle visibility of preview window.
-nnoremap w :view<cr>
-vnoremap w :view<cr>gv
+nnoremap w :view<CR>
+vnoremap w :view<CR>gv
 
 " Open editor to edit 'vifmrc' and apply settings after returning to Vifm.
-nnoremap ,e :write | edit $MYVIFMRC | restart full<cr>
+nnoremap \ce :write | edit $MYVIFMRC | restart full<CR>
 
 " --- Open With ---
 
 " Open file in the background using its default program
-nnoremap gb :file &<cr>l
+nnoremap gb :file &<CR>l
 
 if executable('code')
 	" Open file in VS Code tab.
-	nnoremap o :!code %f<cr>
+	nnoremap o :!code %f<CR>
 	" Open file in VS Code new window.
-	nnoremap O :!code --new-window %f<cr>
+	nnoremap O :!code --new-window %f<CR>
 endif
 
 " }}}
@@ -266,40 +273,40 @@ endif
 
 if executable('clip.exe') && executable('wslpath')
 	" WSL2: pipe to clip.exe; no trailing newline (-n).
-	nnoremap yd :!echo -n %d | clip.exe %i<cr>
-	nnoremap yf :!echo -n %c:p | clip.exe %i<cr>
-	nnoremap yn :!echo -n %c | clip.exe %i<cr>
-	nnoremap yr :!echo -n %c:r | clip.exe %i<cr>
+	nnoremap yd :!echo -n %d | clip.exe %i<CR>
+	nnoremap yf :!echo -n %c:p | clip.exe %i<CR>
+	nnoremap yn :!echo -n %c | clip.exe %i<CR>
+	nnoremap yr :!echo -n %c:r | clip.exe %i<CR>
 elseif has('win')
 	" Native Windows: convert slashes for compatibility.
-	nnoremap yd :!echo %"d:gs!\!/! %i | clip<cr>
-	nnoremap yf :!echo %"c:gs!\!/! %i | clip<cr>
-	nnoremap yn :!echo %"c:gs!\!/! %i | clip<cr>
-	nnoremap yr :!echo %"c:r:gs!\!/! %i | clip<cr>
+	nnoremap yd :!echo %"d:gs!\!/! %i | clip<CR>
+	nnoremap yf :!echo %"c:gs!\!/! %i | clip<CR>
+	nnoremap yn :!echo %"c:gs!\!/! %i | clip<CR>
+	nnoremap yr :!echo %"c:r:gs!\!/! %i | clip<CR>
 elseif has('mac')
-	nnoremap yd :!printf %d | pbcopy<cr>
-	nnoremap yf :!printf %c:p | pbcopy<cr>
-	nnoremap yn :!printf %c | pbcopy<cr>
-	nnoremap yr :!printf %c:r | pbcopy<cr>
+	nnoremap yd :!printf %d | pbcopy<CR>
+	nnoremap yf :!printf %c:p | pbcopy<CR>
+	nnoremap yn :!printf %c | pbcopy<CR>
+	nnoremap yr :!printf %c:r | pbcopy<CR>
 elseif executable('wl-copy')
-	nnoremap yd :!echo -n %d | wl-copy %i<cr>
-	nnoremap yf :!echo -n %c:p | wl-copy %i<cr>
-	nnoremap yn :!echo -n %c | wl-copy %i<cr>
-	nnoremap yr :!echo -n %c:r | wl-copy %i<cr>
+	nnoremap yd :!echo -n %d | wl-copy %i<CR>
+	nnoremap yf :!echo -n %c:p | wl-copy %i<CR>
+	nnoremap yn :!echo -n %c | wl-copy %i<CR>
+	nnoremap yr :!echo -n %c:r | wl-copy %i<CR>
 elseif executable('xclip')
-	nnoremap yd :!echo -n %d | xclip %i<cr>
-	nnoremap yf :!echo -n %c:p | xclip %i<cr>
-	nnoremap yn :!echo -n %c | xclip %i<cr>
-	nnoremap yr :!echo -n %c:r | xclip %i<cr>
+	nnoremap yd :!echo -n %d | xclip %i<CR>
+	nnoremap yf :!echo -n %c:p | xclip %i<CR>
+	nnoremap yn :!echo -n %c | xclip %i<CR>
+	nnoremap yr :!echo -n %c:r | xclip %i<CR>
 elseif executable('xsel')
 	nnoremap yd :!echo -n %d | xsel --input --primary %i &&
-		\ echo -n %d | xsel --clipboard --input %i<cr>
+		\ echo -n %d | xsel --clipboard --input %i<CR>
 	nnoremap yf :!echo -n %c:p | xsel --input --primary %i &&
-		\ echo -n %c:p | xsel --clipboard --input %i<cr>
+		\ echo -n %c:p | xsel --clipboard --input %i<CR>
 	nnoremap yn :!echo -n %c | xsel --input --primary %i &&
-		\ echo -n %c | xsel --clipboard --input %i<cr>
+		\ echo -n %c | xsel --clipboard --input %i<CR>
 	nnoremap yr :!echo -n %c:r | xsel --input --primary %i &&
-		\ echo -n %c:r | xsel --clipboard --input %i<cr>
+		\ echo -n %c:r | xsel --clipboard --input %i<CR>
 endif
 
 " }}}
