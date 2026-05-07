@@ -171,10 +171,10 @@ command! FZFfind : set noquickview
 nnoremap <C-T> :FZFfind<CR>
 
 " MC-like: Mirror current directory in the other pane.
-nnoremap <A-I> :sync<CR>
+nnoremap \i :sync<CR>
 
 " MC-like: Open directory under cursor in the other pane.
-nnoremap <A-O> :sync %c<CR>
+nnoremap \o :sync %c<CR>
 
 " --- Workspace ---
 
