@@ -225,7 +225,7 @@ nnoremap <F9> :set wrap!<CR>:if &wrap | echo 'Wrap on' | else | echo 'Wrap off' 
 
 " --- Editing ---
 
-" Rename without the extension: cursor at end, start, or clear.
+" Rename excluding the extension: cursor at end, start, or clear.
 nnoremap A	cW
 nnoremap I	cW<C-A>
 nnoremap R	cW<C-U>
@@ -269,42 +269,44 @@ endif
 " yn = yank filename.
 " yr = yank filename without extension.
 
+" Caveats: Besides WSL2, I haven't tested the remaining code.
+
 if executable('clip.exe') && executable('wslpath')
-	" WSL2: pipe to clip.exe; no trailing newline (-n).
-	nnoremap yd :!echo -n %d | clip.exe %i<CR>
-	nnoremap yf :!echo -n %c:p | clip.exe %i<CR>
-	nnoremap yn :!echo -n %c | clip.exe %i<CR>
-	nnoremap yr :!echo -n %c:r | clip.exe %i<CR>
+    " WSL2: use powershell for Unicode support.
+    nnoremap yd :!powershell.exe -command "Set-Clipboard -Value '%d'" %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+    nnoremap yf :!powershell.exe -command "Set-Clipboard -Value '%c:p'" %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+    nnoremap yn :!powershell.exe -command "Set-Clipboard -Value '%c'" %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+    nnoremap yr :!powershell.exe -command "Set-Clipboard -Value '%c:r'" %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 elseif has('win')
-	" Native Windows: convert slashes for compatibility.
-	nnoremap yd :!echo %"d:gs!\!/! %i | clip<CR>
-	nnoremap yf :!echo %"c:gs!\!/! %i | clip<CR>
-	nnoremap yn :!echo %"c:gs!\!/! %i | clip<CR>
-	nnoremap yr :!echo %"c:r:gs!\!/! %i | clip<CR>
+    " Native Windows: convert slashes for compatibility.
+    nnoremap yd :!echo %"d:gs!\!/! %i | clip<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+    nnoremap yf :!echo %"c:gs!\!/! %i | clip<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+    nnoremap yn :!echo %"c:gs!\!/! %i | clip<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+    nnoremap yr :!echo %"c:r:gs!\!/! %i | clip<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 elseif has('mac')
-	nnoremap yd :!printf %d | pbcopy<CR>
-	nnoremap yf :!printf %c:p | pbcopy<CR>
-	nnoremap yn :!printf %c | pbcopy<CR>
-	nnoremap yr :!printf %c:r | pbcopy<CR>
+    nnoremap yd :!printf '%s' %d | pbcopy<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+    nnoremap yf :!printf '%s' %c:p | pbcopy<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+    nnoremap yn :!printf '%s' %c | pbcopy<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+    nnoremap yr :!printf '%s' %c:r | pbcopy<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 elseif executable('wl-copy')
-	nnoremap yd :!echo -n %d | wl-copy %i<CR>
-	nnoremap yf :!echo -n %c:p | wl-copy %i<CR>
-	nnoremap yn :!echo -n %c | wl-copy %i<CR>
-	nnoremap yr :!echo -n %c:r | wl-copy %i<CR>
+    nnoremap yd :!printf '%s' %d | wl-copy %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+    nnoremap yf :!printf '%s' %c:p | wl-copy %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+    nnoremap yn :!printf '%s' %c | wl-copy %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+    nnoremap yr :!printf '%s' %c:r | wl-copy %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 elseif executable('xclip')
-	nnoremap yd :!echo -n %d | xclip %i<CR>
-	nnoremap yf :!echo -n %c:p | xclip %i<CR>
-	nnoremap yn :!echo -n %c | xclip %i<CR>
-	nnoremap yr :!echo -n %c:r | xclip %i<CR>
+    nnoremap yd :!printf '%s' %d | xclip %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+    nnoremap yf :!printf '%s' %c:p | xclip %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+    nnoremap yn :!printf '%s' %c | xclip %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+    nnoremap yr :!printf '%s' %c:r | xclip %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 elseif executable('xsel')
-	nnoremap yd :!echo -n %d | xsel --input --primary %i &&
-		\ echo -n %d | xsel --clipboard --input %i<CR>
-	nnoremap yf :!echo -n %c:p | xsel --input --primary %i &&
-		\ echo -n %c:p | xsel --clipboard --input %i<CR>
-	nnoremap yn :!echo -n %c | xsel --input --primary %i &&
-		\ echo -n %c | xsel --clipboard --input %i<CR>
-	nnoremap yr :!echo -n %c:r | xsel --input --primary %i &&
-		\ echo -n %c:r | xsel --clipboard --input %i<CR>
+    nnoremap yd :!printf '%s' %d | xsel --input --primary %i &&
+        \ printf '%s' %d | xsel --clipboard --input %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+    nnoremap yf :!printf '%s' %c:p | xsel --input --primary %i &&
+        \ printf '%s' %c:p | xsel --clipboard --input %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+    nnoremap yn :!printf '%s' %c | xsel --input --primary %i &&
+        \ printf '%s' %c | xsel --clipboard --input %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+    nnoremap yr :!printf '%s' %c:r | xsel --input --primary %i &&
+        \ printf '%s' %c:r | xsel --clipboard --input %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 endif
 
 " }}}
