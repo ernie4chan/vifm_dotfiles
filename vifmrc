@@ -178,7 +178,7 @@ nnoremap \o :sync %c<CR>
 
 " --- Workspace ---
 
-" Ranger's miller columns and tree view.
+" Tree view and Ranger's miller columns.
 nnoremap \n :tree!<CR>
 nnoremap \m :set millerview!<CR>
 
@@ -236,7 +236,7 @@ nnoremap cb	cw<C-A>
 nnoremap cc	cw<C-U>
 
 " Start shell in current directory.
-nnoremap s :shell<CR>
+"nnoremap s :shell<CR>
 
 " Display sorting dialog.
 nnoremap S :sort<CR>
@@ -272,41 +272,41 @@ endif
 " Caveats: Besides WSL2, I haven't tested the remaining code.
 
 if executable('clip.exe') && executable('wslpath')
-    " WSL2: use powershell for Unicode support.
-    nnoremap yd :!powershell.exe -command "Set-Clipboard -Value '%d'" %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-    nnoremap yf :!powershell.exe -command "Set-Clipboard -Value '%c:p'" %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-    nnoremap yn :!powershell.exe -command "Set-Clipboard -Value '%c'" %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-    nnoremap yr :!powershell.exe -command "Set-Clipboard -Value '%c:r'" %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
+	" WSL2: use powershell for Unicode support.
+	nnoremap yd :!powershell.exe -command "Set-Clipboard -Value '%d'" %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+	nnoremap yf :!powershell.exe -command "Set-Clipboard -Value '%c:p'" %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+	nnoremap yn :!powershell.exe -command "Set-Clipboard -Value '%c'" %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+	nnoremap yr :!powershell.exe -command "Set-Clipboard -Value '%c:r'" %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 elseif has('win')
-    " Native Windows: convert slashes for compatibility.
-    nnoremap yd :!echo %"d:gs!\!/! %i | clip<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-    nnoremap yf :!echo %"c:gs!\!/! %i | clip<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-    nnoremap yn :!echo %"c:gs!\!/! %i | clip<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-    nnoremap yr :!echo %"c:r:gs!\!/! %i | clip<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
+	" Native Windows: convert slashes for compatibility.
+	nnoremap yd :!echo %"d:gs!\!/! %i | clip<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+	nnoremap yf :!echo %"c:gs!\!/! %i | clip<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+	nnoremap yn :!echo %"c:gs!\!/! %i | clip<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+	nnoremap yr :!echo %"c:r:gs!\!/! %i | clip<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 elseif has('mac')
-    nnoremap yd :!printf '%s' %d | pbcopy<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-    nnoremap yf :!printf '%s' %c:p | pbcopy<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-    nnoremap yn :!printf '%s' %c | pbcopy<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-    nnoremap yr :!printf '%s' %c:r | pbcopy<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
+	nnoremap yd :!printf '%s' %d | pbcopy<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+	nnoremap yf :!printf '%s' %c:p | pbcopy<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+	nnoremap yn :!printf '%s' %c | pbcopy<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+	nnoremap yr :!printf '%s' %c:r | pbcopy<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 elseif executable('wl-copy')
-    nnoremap yd :!printf '%s' %d | wl-copy %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-    nnoremap yf :!printf '%s' %c:p | wl-copy %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-    nnoremap yn :!printf '%s' %c | wl-copy %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-    nnoremap yr :!printf '%s' %c:r | wl-copy %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
+	nnoremap yd :!printf '%s' %d | wl-copy %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+	nnoremap yf :!printf '%s' %c:p | wl-copy %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+	nnoremap yn :!printf '%s' %c | wl-copy %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+	nnoremap yr :!printf '%s' %c:r | wl-copy %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 elseif executable('xclip')
-    nnoremap yd :!printf '%s' %d | xclip %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-    nnoremap yf :!printf '%s' %c:p | xclip %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-    nnoremap yn :!printf '%s' %c | xclip %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-    nnoremap yr :!printf '%s' %c:r | xclip %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
+	nnoremap yd :!printf '%s' %d | xclip %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+	nnoremap yf :!printf '%s' %c:p | xclip %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+	nnoremap yn :!printf '%s' %c | xclip %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+	nnoremap yr :!printf '%s' %c:r | xclip %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 elseif executable('xsel')
-    nnoremap yd :!printf '%s' %d | xsel --input --primary %i &&
-        \ printf '%s' %d | xsel --clipboard --input %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-    nnoremap yf :!printf '%s' %c:p | xsel --input --primary %i &&
-        \ printf '%s' %c:p | xsel --clipboard --input %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-    nnoremap yn :!printf '%s' %c | xsel --input --primary %i &&
-        \ printf '%s' %c | xsel --clipboard --input %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-    nnoremap yr :!printf '%s' %c:r | xsel --input --primary %i &&
-        \ printf '%s' %c:r | xsel --clipboard --input %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
+	nnoremap yd :!printf '%s' %d | xsel --input --primary %i &&
+		\ printf '%s' %d | xsel --clipboard --input %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+	nnoremap yf :!printf '%s' %c:p | xsel --input --primary %i &&
+		\ printf '%s' %c:p | xsel --clipboard --input %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+	nnoremap yn :!printf '%s' %c | xsel --input --primary %i &&
+		\ printf '%s' %c | xsel --clipboard --input %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+	nnoremap yr :!printf '%s' %c:r | xsel --input --primary %i &&
+		\ printf '%s' %c:r | xsel --clipboard --input %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
 endif
 
 " }}}
