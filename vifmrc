@@ -8,7 +8,7 @@
 " v.3: 2026/05/02
 " ---------------------------------------------------------
 
-" {{{ Editor.
+" {{{ Editor
 
 " Pick the first available vi-compatible editor.
 if executable('vim')
@@ -26,7 +26,7 @@ endif
 
 " }}}
 
-" {{{ Display.
+" {{{ Display
 
 " Colorschme: picks the first one supported by the terminal.
 colorscheme gruvbox
@@ -45,7 +45,7 @@ set timefmt=%d/%m/%y\ %H:%M
 
 " }}}
 
-" {{{ Behavior.
+" {{{ Behavior
 
 " Perform file operations natively instead of relying on external utilities.
 set syscalls
@@ -103,7 +103,7 @@ set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
 
 " }}}
 
-" {{{ Searching.
+" {{{ Searching
 
 " Grep program with suppressed permission errors.
 set grepprg="grep -n -H -I -r -s %i %a %s"
@@ -122,7 +122,7 @@ set hlsearch
 
 " }}}
 
-" {{{ Bookmarks.
+" {{{ Bookmarks
 
 " :mark mark /full/directory/path [filename]
 mark d ~/Descargas
@@ -131,7 +131,7 @@ mark h ~/
 
 " }}}
 
-" {{{ Commands.
+" {{{ Commands
 
 " :com[mand][!] command_name action
 " The following macros can be used in a command.
@@ -163,7 +163,7 @@ command! FZFfind : set noquickview
 
 " }}}
 
-" {{{ Mappings.
+" {{{ Mappings
 
 " --- Navigation ---
 
@@ -262,7 +262,7 @@ endif
 
 " }}}
 
-" {{{ Copy & Paste.
+" {{{ Copy & Paste
 
 " yd = yank current directory path.
 " yf = yank full file path.
@@ -311,7 +311,7 @@ endif
 
 " }}}
 
-" {{{ File Types.
+" {{{ File Types
 " :filetype pattern1,pattern2 defaultprogram,program2
 " :fileviewer pattern1,pattern2 consoleviewer
 
@@ -452,7 +452,7 @@ fileviewer	{*.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz,*.tar.zst,*.tzs
 
 " }}}
 
-" {{{ Plugins.
+" {{{ Plugins
 
 " New icon set for vifm.
 source ~/.config/vifm/scripts/vifm_devicons/favicons.vifm
