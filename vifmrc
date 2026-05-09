@@ -131,7 +131,9 @@ mark h ~/
 
 " }}}
 
-" {{{ Commands
+" {{{ Mappings
+
+" --- Commands ---
 
 " :com[mand][!] command_name action
 " The following macros can be used in a command.
@@ -155,15 +157,11 @@ command! reload :write | restart full
 
 " Fuzzy file search using fzf.
 command! FZFfind : set noquickview
-				\| let $FZF_PICK = system('find | fzf 2>/dev/tty')
-				\| if $FZF_PICK != ''
-				\|     execute 'goto' fnameescape($FZF_PICK)
-				\| endif
-				\| redraw
-
-" }}}
-
-" {{{ Mappings
+    \| let $FZF_PICK = system('find . | fzf --preview "file {}" 2>/dev/tty')
+    \| if $FZF_PICK != ''
+    \|     execute 'goto' fnameescape(trim($FZF_PICK))
+    \| endif
+    \| redraw
 
 " --- Navigation ---
 
