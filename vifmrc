@@ -155,13 +155,12 @@ command! make !!make %a
 command! mkcd :mkdir %a | cd %a
 command! reload :write | restart full
 
-" Fuzzy file search using fzf.
+" Fuzzy file search using FZF.
 command! FZFfind : set noquickview
-    \| let $FZF_PICK = system('find . | fzf --preview "file {}" 2>/dev/tty')
-    \| if $FZF_PICK != ''
-    \|     execute 'goto' fnameescape(trim($FZF_PICK))
-    \| endif
-    \| redraw
+	\| let $FZF_PICK = term('find | fzf --height 10 2>/dev/tty')
+	\| if $FZF_PICK != ''
+	\|     execute 'goto' fnameescape($FZF_PICK)
+	\| endif
 
 " --- Navigation ---
 
@@ -180,8 +179,9 @@ nnoremap \o :sync %c<CR>
 nnoremap \n :tree!<CR>
 nnoremap \m :set millerview!<CR>
 
-" Switch panes.
+" Exchange and swap panes.
 nnoremap \x <C-W>x
+nnoremap \w <C-W>w
 
 " Tab manipulation.
 nnoremap \q	:tabclose<CR>
@@ -262,49 +262,32 @@ endif
 
 " {{{ Copy & Paste
 
-" yd = yank current directory path.
 " yf = yank full file path.
+" yd = yank current directory path.
 " yn = yank filename.
 " yr = yank filename without extension.
 
 " Caveats: Besides WSL2, I haven't tested the remaining code.
 
-if executable('clip.exe') && executable('wslpath')
-	" WSL2: use powershell for Unicode support.
-	nnoremap yd :!powershell.exe -command "Set-Clipboard -Value '%d'" %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-	nnoremap yf :!powershell.exe -command "Set-Clipboard -Value '%c:p'" %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-	nnoremap yn :!powershell.exe -command "Set-Clipboard -Value '%c'" %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-	nnoremap yr :!powershell.exe -command "Set-Clipboard -Value '%c:r'" %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
-elseif has('win')
-	" Native Windows: convert slashes for compatibility.
-	nnoremap yd :!echo %"d:gs!\!/! %i | clip<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-	nnoremap yf :!echo %"c:gs!\!/! %i | clip<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-	nnoremap yn :!echo %"c:gs!\!/! %i | clip<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-	nnoremap yr :!echo %"c:r:gs!\!/! %i | clip<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
-elseif has('mac')
-	nnoremap yd :!printf '%s' %d | pbcopy<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-	nnoremap yf :!printf '%s' %c:p | pbcopy<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-	nnoremap yn :!printf '%s' %c | pbcopy<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-	nnoremap yr :!printf '%s' %c:r | pbcopy<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
-elseif executable('wl-copy')
-	nnoremap yd :!printf '%s' %d | wl-copy %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-	nnoremap yf :!printf '%s' %c:p | wl-copy %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-	nnoremap yn :!printf '%s' %c | wl-copy %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-	nnoremap yr :!printf '%s' %c:r | wl-copy %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
-elseif executable('xclip')
-	nnoremap yd :!printf '%s' %d | xclip %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-	nnoremap yf :!printf '%s' %c:p | xclip %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-	nnoremap yn :!printf '%s' %c | xclip %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-	nnoremap yr :!printf '%s' %c:r | xclip %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
-elseif executable('xsel')
-	nnoremap yd :!printf '%s' %d | xsel --input --primary %i &&
-		\ printf '%s' %d | xsel --clipboard --input %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
-	nnoremap yf :!printf '%s' %c:p | xsel --input --primary %i &&
-		\ printf '%s' %c:p | xsel --clipboard --input %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
-	nnoremap yn :!printf '%s' %c | xsel --input --primary %i &&
-		\ printf '%s' %c | xsel --clipboard --input %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
-	nnoremap yr :!printf '%s' %c:r | xsel --input --primary %i &&
-		\ printf '%s' %c:r | xsel --clipboard --input %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
+" Interaction with system clipboard.
+if executable('wl-copy')
+	" Wayland.
+	nnoremap yf :!wl-copy %c:p %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+	nnoremap yd :!wl-copy %d %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+	nnoremap yn :!wl-copy %c %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+	nnoremap yr :!wl-copy %c:r %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
+elseif !executable('wl-copy') && (executable('wslpath') || has('win32'))
+	" WSL2 fallback: PowerShell.
+	nnoremap yf :!powershell.exe "Set-Clipboard -Value '%c:p'" %i<CR>:echo expand('%"c:p') 'yanked to clipboard'<CR>
+	nnoremap yd :!powershell.exe "Set-Clipboard -Value '%d'" %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
+	nnoremap yn :!powershell.exe "Set-Clipboard -Value '%c'" %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
+	nnoremap yr :!powershell.exe "Set-Clipboard -Value '%c:r'" %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
+elseif !executable('wl-copy') && executable('clip.exe') && has('win32')
+	" Yank to Windows clipboard with forward slashes, no trailing newline.
+	nnoremap yf :!echo -n "%:p:gs!\\!/!" \| clip.exe<CR>:echo expand('%:p') 'yanked'<CR>
+	nnoremap yd :!echo -n "%:p:h:gs!\\!/!" \| clip.exe<CR>:echo expand('%:p:h') 'yanked'<CR>
+	nnoremap yn :!echo -n "%:t:gs!\\!/!" \| clip.exe<CR>:echo expand('%:t') 'yanked'<CR>
+	nnoremap yr :!echo -n "%:t:r:gs!\\!/!" \| clip.exe<CR>:echo expand('%:t:r') 'yanked'<CR>
 endif
 
 " }}}
