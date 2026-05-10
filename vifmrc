@@ -263,11 +263,9 @@ endif
 " {{{ Copy & Paste
 
 " yf = yank full file path.
-" yd = yank current directory path.
-" yn = yank filename.
+" yd = yank directory path.
+" yn = yank filename with extension.
 " yr = yank filename without extension.
-
-" Caveats: Besides WSL2, I haven't tested the remaining code.
 
 " Interaction with system clipboard.
 if executable('wl-copy')
@@ -282,12 +280,6 @@ elseif !executable('wl-copy') && (executable('wslpath') || has('win32'))
 	nnoremap yd :!powershell.exe "Set-Clipboard -Value '%d'" %i<CR>:echo expand('%"d') 'yanked to clipboard'<CR>
 	nnoremap yn :!powershell.exe "Set-Clipboard -Value '%c'" %i<CR>:echo expand('%"c') 'yanked to clipboard'<CR>
 	nnoremap yr :!powershell.exe "Set-Clipboard -Value '%c:r'" %i<CR>:echo expand('%"c:r') 'yanked to clipboard'<CR>
-elseif !executable('wl-copy') && executable('clip.exe') && has('win32')
-	" Yank to Windows clipboard with forward slashes, no trailing newline.
-	nnoremap yf :!echo -n "%:p:gs!\\!/!" \| clip.exe<CR>:echo expand('%:p') 'yanked'<CR>
-	nnoremap yd :!echo -n "%:p:h:gs!\\!/!" \| clip.exe<CR>:echo expand('%:p:h') 'yanked'<CR>
-	nnoremap yn :!echo -n "%:t:gs!\\!/!" \| clip.exe<CR>:echo expand('%:t') 'yanked'<CR>
-	nnoremap yr :!echo -n "%:t:r:gs!\\!/!" \| clip.exe<CR>:echo expand('%:t:r') 'yanked'<CR>
 endif
 
 " }}}
